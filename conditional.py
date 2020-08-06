@@ -28,6 +28,8 @@ def get_opc_dict(dir,dict,label,smart_contract_name):
     print(dict)
 
     condition_op_block(dir,dict,label,smart_contract_name)
+    uncondition_op_block(dir,dict,label,smart_contract_name)
+    eq_op_block(dir,dict,label,smart_contract_name)
     # arith_opc_block(dir,dict,label,smart_contract_name)
     # return dict
 def arith_opc_block(dir,dict,label,smart_contract_name):
@@ -80,6 +82,44 @@ def condition_op_block(dir,dict,label,smart_contract_name):
         numdict_track[key]=count;
 
     file = 'label'+str(label)+'single_block_condition.csv'
+    for key in numdict_track:
+        write = smart_contract_name+","+str(numdict_track[key])+"\n"
+        f = open(project_dir+file, "a+")
+        f.write(write)
+
+def uncondition_op_block(dir,dict,label,smart_contract_name):
+    opc_dict=dict
+    #Number of unconditional branch in a single block
+    numdict=opc_dict
+    numdict_track={}
+    condition_opc = ["JUMP"]
+    for key in numdict:
+        count=0;
+        for value in numdict[key]:
+            if value in condition_opc:
+                count=count+1;
+        numdict_track[key]=count;
+
+    file = 'label'+str(label)+'single_block_uncondition.csv'
+    for key in numdict_track:
+        write = smart_contract_name+","+str(numdict_track[key])+"\n"
+        f = open(project_dir+file, "a+")
+        f.write(write)
+
+def eq_op_block(dir,dict,label,smart_contract_name):
+    opc_dict=dict
+    #Number of equal check in a single block
+    numdict=opc_dict
+    numdict_track={}
+    condition_opc = ["EQ"]
+    for key in numdict:
+        count=0;
+        for value in numdict[key]:
+            if value in condition_opc:
+                count=count+1;
+        numdict_track[key]=count;
+
+    file = 'label'+str(label)+'single_block_eq.csv'
     for key in numdict_track:
         write = smart_contract_name+","+str(numdict_track[key])+"\n"
         f = open(project_dir+file, "a+")
