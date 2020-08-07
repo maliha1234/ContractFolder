@@ -125,6 +125,27 @@ def eq_op_block(dir,dict,label,smart_contract_name):
         f = open(project_dir+file, "a+")
         f.write(write)
 
+def get_definition_dict(dir,dict,label,smart_contract_name):
+    numdict_track={}
+    f=open(dir+"/def.facts", 'r')
+
+    for key in dict:
+        count=0;
+        lines=f.readlines()
+        for value in dict[key]:
+            for line in lines:
+                if value == line.split()[1]:
+                    count=count+1;
+                    print("COUNT" + str(value) + "888888" + str(count))
+        numdict_track[key]=count;
+
+    file = 'label'+str(label)+'single_block_definition.csv'
+    for key in numdict_track:
+        write = smart_contract_name+","+str(numdict_track[key])+"\n"
+        f = open(project_dir+file, "a+")
+        f.write(write)
+    
+
 def writeSome(dir,dict,label,smart_contract_name,numdict_track,numdict_max_track,numdict_load_track):
     #Number of arithmetic operation in a single block
     #Maximum number of arithmetic operation from any single block
@@ -219,7 +240,8 @@ def deal_one_contract(dir):
     dict=getblock_dict(dir)
     label= getlabel(project_dir+smart_contract_name)
     # max= max_instructions(dict,label,smart_contract_name)
-    opc = get_opc_dict(dir,dict,label,smart_contract_name)
+    # opc = get_opc_dict(dir,dict,label,smart_contract_name)
+    definition = get_definition_dict(dir,dict,label,smart_contract_name)
     # an = num_total_basic_blocks(dict,label,smart_contract_name)
 if __name__ == "__main__":
     fetch_dirfiles(project_dir)
