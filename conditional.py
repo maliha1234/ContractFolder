@@ -173,7 +173,34 @@ def get_use_dict(dir,dict,label,smart_contract_name):
 
     except FileNotFoundError:
         print("Wrong file or file path")
-    
+
+def get_back_edge_dict(dir,dict,label,smart_contract_name):
+    numdict_track={}
+    try:
+        f=open(dir+"/CFGEdge.facts", 'r')
+
+       
+        lines=f.readlines()
+        
+        for line in lines:
+            start_point = line.split()[0];
+            numdict_track[start_point]=1;
+
+        count = 0;
+        for line in lines:
+            end_point = line.split()[1];
+            if end_point in numdict_track.keys():
+                count = count+1;
+
+
+        file = 'label'+str(label)+'single_block_back_edge.csv'
+        
+        write = smart_contract_name+","+str(count)+"\n"
+        f = open(project_dir+file, "a+")
+        f.write(write)
+
+    except FileNotFoundError:
+        print("Wrong file or file path")
 
 def writeSome(dir,dict,label,smart_contract_name,numdict_track,numdict_max_track,numdict_load_track):
     #Number of arithmetic operation in a single block
@@ -269,9 +296,10 @@ def deal_one_contract(dir):
     dict=getblock_dict(dir)
     label= getlabel(project_dir+smart_contract_name)
     # max= max_instructions(dict,label,smart_contract_name)
-    opc = get_opc_dict(dir,dict,label,smart_contract_name)
-    definition = get_definition_dict(dir,dict,label,smart_contract_name)
-    use = get_use_dict(dir,dict,label,smart_contract_name)
+    # opc = get_opc_dict(dir,dict,label,smart_contract_name)
+    # definition = get_definition_dict(dir,dict,label,smart_contract_name)
+    backeddge = get_back_edge_dict(dir,dict,label,smart_contract_name)
+    # use = get_use_dict(dir,dict,label,smart_contract_name)
     # an = num_total_basic_blocks(dict,label,smart_contract_name)
 if __name__ == "__main__":
     fetch_dirfiles(project_dir)
