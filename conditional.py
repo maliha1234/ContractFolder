@@ -182,16 +182,13 @@ def get_back_edge_dict(dir,dict,label,smart_contract_name):
        
         lines=f.readlines()
         
+        count = 0;
         for line in lines:
             start_point = line.split()[0];
             numdict_track[start_point]=1;
-
-        count = 0;
-        for line in lines:
             end_point = line.split()[1];
             if end_point in numdict_track.keys():
                 count = count+1;
-
 
         file = 'label'+str(label)+'single_block_back_edge.csv'
         
