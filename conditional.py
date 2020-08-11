@@ -199,6 +199,40 @@ def get_back_edge_dict(dir,dict,label,smart_contract_name):
     except FileNotFoundError:
         print("Wrong file or file path")
 
+def get_entry_exit_dict(dir,dict,label,smart_contract_name):
+    
+    try:
+        f=open(dir+"/entry.facts", 'r')
+
+        lines=f.readlines()
+        count = len(lines)  
+
+        file = 'label'+str(label)+'single_block_entry.csv'
+        
+        write = smart_contract_name+","+str(count)+"\n"
+        f = open(project_dir+file, "a+")
+        f.write(write)
+
+    except FileNotFoundError:
+        print("Wrong file or file path")
+
+
+    
+    try:
+        f=open(dir+"/exit.facts", 'r')
+
+        lines=f.readlines()
+        count = len(lines)  
+
+        file = 'label'+str(label)+'single_block_exit.csv'
+        
+        write = smart_contract_name+","+str(count)+"\n"
+        f = open(project_dir+file, "a+")
+        f.write(write)
+
+    except FileNotFoundError:
+        print("Wrong file or file path")
+
 def writeSome(dir,dict,label,smart_contract_name,numdict_track,numdict_max_track,numdict_load_track):
     #Number of arithmetic operation in a single block
     #Maximum number of arithmetic operation from any single block
@@ -295,7 +329,9 @@ def deal_one_contract(dir):
     # max= max_instructions(dict,label,smart_contract_name)
     # opc = get_opc_dict(dir,dict,label,smart_contract_name)
     # definition = get_definition_dict(dir,dict,label,smart_contract_name)
-    backeddge = get_back_edge_dict(dir,dict,label,smart_contract_name)
+    #backeddge = get_back_edge_dict(dir,dict,label,smart_contract_name)
+    entry_exit = get_entry_exit_dict(dir,dict,label,smart_contract_name)
+
     # use = get_use_dict(dir,dict,label,smart_contract_name)
     # an = num_total_basic_blocks(dict,label,smart_contract_name)
 if __name__ == "__main__":
