@@ -2,12 +2,9 @@ project_dir= "/Users/malihasarwat/Documents/Summer2020/Sir/FengCodes/"
 def num_total_basic_blocks(dict,label,smart_contract_name):
     #Number total basic blocks
     total_basic_blocks = len(dict)
-    write = smart_contract_name+","+str(total_basic_blocks)+"\n"
     import os
-    file = 'label'+str(label)+'_num_total_basic_blocks.csv'
-
-    f = open(project_dir+file, "a+")
-    f.write(write)
+    
+    return total_basic_blocks
 def max_instructions(dict,label,smart_contract_name):
     #Max number of instruction of a single block
     max=0;
@@ -15,11 +12,7 @@ def max_instructions(dict,label,smart_contract_name):
         if len(dict[key])>max:
             max=len(dict[key])
     
-    file = 'label'+str(label)+'_max_instructions_block.csv'
-    write = smart_contract_name+","+str(max)+"\n"
-    print("$$$$ wring to max max_instructions",file)
-    f = open(project_dir+file, "a+")
-    f.write(write)
+    return str(max)
 def get_opc_dict(dir,dict,label,smart_contract_name):
     for key in dict:
         list=[]
@@ -62,6 +55,7 @@ def max_arith_opc_block(dir,dict,label,smart_contract_name):
         if max<numdict_track[key]:
             max = numdict_track[key]
     numdict_max_track =max
+    return str(numdict_max_track)
 
 def arith_opc_block(dir,dict,label,smart_contract_name):
     opc_dict=dict
@@ -90,11 +84,7 @@ def load_opc_block(dir,dict,label,smart_contract_name):
             if value in loadstore:
                 count=count+1;
         numdict_load_track[key]=count;
-    print("numdict_track",numdict_track)
-    print("numdict_max_track",numdict_max_track)
-    print("numdict_load_track",numdict_load_track)
-    # writeSome(dir,dict,label,smart_contract_name,numdict_track,numdict_max_track,numdict_load_track)
-
+    
 def condition_op_block(dir,dict,label,smart_contract_name):
     opc_dict=dict
     #Number of conditional branch in a single block
@@ -217,14 +207,11 @@ def get_back_edge_dict(dir,dict,label,smart_contract_name):
             if end_point in numdict_track.keys():
                 count = count+1;
 
-        file = 'label'+str(label)+'single_block_back_edge.csv'
-        
-        write = smart_contract_name+","+str(count)+"\n"
-        f = open(project_dir+file, "a+")
-        f.write(write)
+    
 
     except FileNotFoundError:
         print("Wrong file or file path")
+    return str(count)
 
 def get_entry_exit_dict(dir,dict,label,smart_contract_name):
     
@@ -234,16 +221,10 @@ def get_entry_exit_dict(dir,dict,label,smart_contract_name):
         lines=f.readlines()
         count = len(lines)  
 
-        file = 'label'+str(label)+'single_block_entry.csv'
-        
-        write = smart_contract_name+","+str(count)+"\n"
-        f = open(project_dir+file, "a+")
-        f.write(write)
-
     except FileNotFoundError:
         print("Wrong file or file path")
 
-
+    finalstr = str(count) + ","
     
     try:
         f=open(dir+"/exit.facts", 'r')
@@ -251,15 +232,10 @@ def get_entry_exit_dict(dir,dict,label,smart_contract_name):
         lines=f.readlines()
         count = len(lines)  
 
-        file = 'label'+str(label)+'single_block_exit.csv'
-        
-        write = smart_contract_name+","+str(count)+"\n"
-        f = open(project_dir+file, "a+")
-        f.write(write)
-
     except FileNotFoundError:
         print("Wrong file or file path")
-
+    finalstr +=str(count)
+    return finalstr
 
 def zero_count_op_block(dir,dict,label,smart_contract_name):
     opc_dict=dict
@@ -381,11 +357,11 @@ def getblock_dict(dir):
             dict[block]= [value]
         else:
             dict[block].append(value)
-    print(dict)
+    #print(dict)
     return dict
 def getlabel(dir):
     newdir = dir.split("/")[-1]
-    print("newdir",newdir)
+    #print("newdir",newdir)
     import csv
 
     with open(project_dir+"/"+"AllSmartContractBinLabel_Oyente.csv") as csv_file:
@@ -424,7 +400,7 @@ def deal_one_dir(dir):
                 # print("the path is",path)
     for one in path:
         # deal_one_file('/media/feng/Samsung_T5/decompile/'+one);
-        print("one",one)
+        #print("one",one)
         deal_one_contract(one);
 def deal_one_contract(dir):
     smart_contract_name= dir.split("/")[-1]
@@ -437,7 +413,9 @@ def deal_one_contract(dir):
     entry_exit = get_entry_exit_dict(dir,dict,label,smart_contract_name) # 15 16
     #use = 
     an = num_total_basic_blocks(dict,label,smart_contract_name) #17
-    opc = get_opc_dict(dir,dict,label,smart_contract_name) 
+    #opc = get_opc_dict(dir,dict,label,smart_contract_name) 
+    print( "Final OUTPUT" + str(max_instruc) + "," + str(max_arith)+ "," + str(backeddge) + "," + str(entry_exit) + "," + str(an) + "\n")
+    
 if __name__ == "__main__":
     fetch_dirfiles(project_dir)
     # main()
