@@ -13,29 +13,7 @@ def max_instructions(dict,label,smart_contract_name):
             max=len(dict[key])
     
     return str(max)
-def get_opc_dict(dir,dict,label,smart_contract_name):
-    for key in dict:
-        list=[]
-        for value in dict[key]:
-            list.append(getopcname(dir,value))
-        dict[key]= list
-    print(dict)
 
-    
-    condition_op_block(dir,dict,label,smart_contract_name) #1
-    uncondition_op_block(dir,dict,label,smart_contract_name) # 2
-    eq_op_block(dir,dict,label,smart_contract_name) #3 
-    zero_count_op_block(dir,dict,label,smart_contract_name) #4
-    data_load_op_block(dir,dict,label,smart_contract_name) #5
-    sha_op_block(dir,dict,label,smart_contract_name) #6
-    revert_op_block(dir,dict,label,smart_contract_name) #7
-    get_definition_dict(dir,dict,label,smart_contract_name) # 8
-    get_use_dict(dir,dict,label,smart_contract_name) # 9
-    # 1,2,3, 9, 10,11,12
-
-    arith_opc_block(dir,dict,label,smart_contract_name) #10
-    load_opc_block(dir,dict,label,smart_contract_name) #11
-    # return dict
 def max_arith_opc_block(dir,dict,label,smart_contract_name):
     opc_dict=dict
     #Number of arithmetic operation in a single block
@@ -56,140 +34,6 @@ def max_arith_opc_block(dir,dict,label,smart_contract_name):
             max = numdict_track[key]
     numdict_max_track =max
     return str(numdict_max_track)
-
-def arith_opc_block(dir,dict,label,smart_contract_name):
-    opc_dict=dict
-    #Number of arithmetic operation in a single block
-    numdict=opc_dict
-    numdict_track={}
-    arit_opc = ["ADD","MUL","SUB","DIV","SDIV","SMOD","ADDMOD","MULMOD","EXP","SIGNEXTEND"]
-    for key in numdict:
-        count=0;
-        for value in numdict[key]:
-            if value in arit_opc:
-                count=count+1;
-        numdict_track[key]=count;
-
-
-def load_opc_block(dir,dict,label,smart_contract_name):
-    opc_dict=dict
-    #Number of arithmetic operation in a single block
-    numdict=opc_dict
-    loadstore=["MLOAD","MSTORE","MSTORE8","SLOAD","SSTORE"]
-    #Number of load and store operation in a single block
-    numdict_load_track={}
-    for key in numdict:
-        count=0;
-        for value in numdict[key]:
-            if value in loadstore:
-                count=count+1;
-        numdict_load_track[key]=count;
-    
-def condition_op_block(dir,dict,label,smart_contract_name):
-    opc_dict=dict
-    #Number of conditional branch in a single block
-    numdict=opc_dict
-    numdict_track={}
-    condition_opc = ["JUMPI"]
-    for key in numdict:
-        count=0;
-        for value in numdict[key]:
-            if value in condition_opc:
-                count=count+1;
-        numdict_track[key]=count;
-
-    file = 'label'+str(label)+'single_block_condition.csv'
-    for key in numdict_track:
-        write = smart_contract_name+","+str(numdict_track[key])+"\n"
-        f = open(project_dir+file, "a+")
-        f.write(write)
-
-def uncondition_op_block(dir,dict,label,smart_contract_name):
-    opc_dict=dict
-    #Number of unconditional branch in a single block
-    numdict=opc_dict
-    numdict_track={}
-    condition_opc = ["JUMP"]
-    for key in numdict:
-        count=0;
-        for value in numdict[key]:
-            if value in condition_opc:
-                count=count+1;
-        numdict_track[key]=count;
-
-    file = 'label'+str(label)+'single_block_uncondition.csv'
-    for key in numdict_track:
-        write = smart_contract_name+","+str(numdict_track[key])+"\n"
-        f = open(project_dir+file, "a+")
-        f.write(write)
-
-def eq_op_block(dir,dict,label,smart_contract_name):
-    opc_dict=dict
-    #Number of equal check in a single block
-    numdict=opc_dict
-    numdict_track={}
-    condition_opc = ["EQ"]
-    for key in numdict:
-        count=0;
-        for value in numdict[key]:
-            if value in condition_opc:
-                count=count+1;
-        numdict_track[key]=count;
-
-    file = 'label'+str(label)+'single_block_eq.csv'
-    for key in numdict_track:
-        write = smart_contract_name+","+str(numdict_track[key])+"\n"
-        f = open(project_dir+file, "a+")
-        f.write(write)
-
-def get_definition_dict(dir,dict,label,smart_contract_name):
-    numdict_track={}
-    try:
-        f=open(dir+"/def.facts", 'r')
-
-        for key in dict:
-            count=0;
-            lines=f.readlines()
-            for value in dict[key]:
-                for line in lines:
-                    if value == line.split()[1]:
-                        count=count+1;
-                        print("COUNT" + str(value) + "888888" + str(count))
-            numdict_track[key]=count;
-
-        file = 'label'+str(label)+'single_block_definition.csv'
-        for key in numdict_track:
-            write = smart_contract_name+","+str(numdict_track[key])+"\n"
-            f = open(project_dir+file, "a+")
-            f.write(write)
-
-    except FileNotFoundError:
-        print("Wrong file or file path")
-
-def get_use_dict(dir,dict,label,smart_contract_name):
-    numdict_track={}
-
-    try:    
-        f=open(dir+"/use.facts", 'r')
-
-        for key in dict:
-            count=0;
-            lines=f.readlines()
-            for value in dict[key]:
-                for line in lines:
-                    if value == line.split()[1]:
-                        count=count+1;
-                        # print("Key" + key + "COUNT" + str(value) + "999999" + str(count))
-            numdict_track[key]=count;
-
-        file = 'label'+str(label)+'single_block_use.csv'
-        for key in numdict_track:
-            write = smart_contract_name+","+str(numdict_track[key])+"\n"
-            f = open(project_dir+file, "a+")
-            f.write(write)
-
-    except FileNotFoundError:
-        print("Wrong file or file path")
 
 def get_back_edge_dict(dir,dict,label,smart_contract_name):
     numdict_track={}
@@ -237,6 +81,157 @@ def get_entry_exit_dict(dir,dict,label,smart_contract_name):
     finalstr +=str(count)
     return finalstr
 
+   
+def get_opc_dict(dir,dict,label,smart_contract_name, first_six_features):
+    for key in dict:
+        list=[]
+        for value in dict[key]:
+            list.append(getopcname(dir,value))
+        dict[key]= list
+    print(dict)
+
+    
+    dict1 = condition_op_block(dir,dict,label,smart_contract_name) #1
+    dict2 = uncondition_op_block(dir,dict,label,smart_contract_name) # 2
+    dict3 = eq_op_block(dir,dict,label,smart_contract_name) #3 
+    dict4 = zero_count_op_block(dir,dict,label,smart_contract_name) #4
+    dict5 = data_load_op_block(dir,dict,label,smart_contract_name) #5
+    dict6 = sha_op_block(dir,dict,label,smart_contract_name) #6
+    dict7 = revert_op_block(dir,dict,label,smart_contract_name) #7
+    dict8 = get_definition_dict(dir,dict,label,smart_contract_name) # 8
+    dict9 = get_use_dict(dir,dict,label,smart_contract_name) # 9
+    dict10 =arith_opc_block(dir,dict,label,smart_contract_name) #10
+    dict11 = load_opc_block(dir,dict,label,smart_contract_name) #11
+    # return dict
+
+    file = 'all_features.csv'
+    for key in dict:
+
+        write = smart_contract_name+","+ str(label)+ "," + first_six_features +"," + str(dict1[key]) +","+str(dict2[key])+ ","+ str(dict3[key])+ ","+str(dict4[key])+ ","+str(dict5[key])+ ","+str(dict6[key])+ ","+str(dict7[key])+ ","+str(dict8[key]) + ","+str(dict9[key])+ ","+str(dict10[key])+ ","+str(dict11[key])+"\n"
+        f = open(project_dir+file, "a+")
+        f.write(write)
+
+
+def arith_opc_block(dir,dict,label,smart_contract_name):
+    opc_dict=dict
+    #Number of arithmetic operation in a single block
+    numdict=opc_dict
+    numdict_track={}
+    arit_opc = ["ADD","MUL","SUB","DIV","SDIV","SMOD","ADDMOD","MULMOD","EXP","SIGNEXTEND"]
+    for key in numdict:
+        count=0;
+        for value in numdict[key]:
+            if value in arit_opc:
+                count=count+1;
+        numdict_track[key]=count;
+
+    return numdict_track
+
+
+def load_opc_block(dir,dict,label,smart_contract_name):
+    opc_dict=dict
+    #Number of arithmetic operation in a single block
+    numdict=opc_dict
+    loadstore=["MLOAD","MSTORE","MSTORE8","SLOAD","SSTORE"]
+    #Number of load and store operation in a single block
+    numdict_load_track={}
+    for key in numdict:
+        count=0;
+        for value in numdict[key]:
+            if value in loadstore:
+                count=count+1;
+        numdict_load_track[key]=count;
+    return numdict_load_track
+    
+def condition_op_block(dir,dict,label,smart_contract_name):
+    opc_dict=dict
+    #Number of conditional branch in a single block
+    numdict=opc_dict
+    numdict_track={}
+    condition_opc = ["JUMPI"]
+    for key in numdict:
+        count=0;
+        for value in numdict[key]:
+            if value in condition_opc:
+                count=count+1;
+        numdict_track[key]=count;
+
+    return numdict_track
+
+def uncondition_op_block(dir,dict,label,smart_contract_name):
+    opc_dict=dict
+    #Number of unconditional branch in a single block
+    numdict=opc_dict
+    numdict_track={}
+    condition_opc = ["JUMP"]
+    for key in numdict:
+        count=0;
+        for value in numdict[key]:
+            if value in condition_opc:
+                count=count+1;
+        numdict_track[key]=count;
+
+    return numdict_track
+
+def eq_op_block(dir,dict,label,smart_contract_name):
+    opc_dict=dict
+    #Number of equal check in a single block
+    numdict=opc_dict
+    numdict_track={}
+    condition_opc = ["EQ"]
+    for key in numdict:
+        count=0;
+        for value in numdict[key]:
+            if value in condition_opc:
+                count=count+1;
+        numdict_track[key]=count;
+
+    return numdict_track
+
+def get_definition_dict(dir,dict,label,smart_contract_name):
+    numdict_track={}
+    try:
+        f=open(dir+"/def.facts", 'r')
+
+        for key in dict:
+            count=0;
+            lines=f.readlines()
+            for value in dict[key]:
+                for line in lines:
+                    if value == line.split()[1]:
+                        count=count+1;
+                        print("COUNT" + str(value) + "888888" + str(count))
+            numdict_track[key]=count;
+    
+    
+    except FileNotFoundError:
+        print("Wrong file or file path")
+    return numdict_track
+    
+def get_use_dict(dir,dict,label,smart_contract_name):
+    numdict_track={}
+
+    try:    
+        f=open(dir+"/use.facts", 'r')
+
+        for key in dict:
+            count=0;
+            lines=f.readlines()
+            for value in dict[key]:
+                for line in lines:
+                    if value == line.split()[1]:
+                        count=count+1;
+                        # print("Key" + key + "COUNT" + str(value) + "999999" + str(count))
+            numdict_track[key]=count;
+
+        
+    
+
+    except FileNotFoundError:
+        print("Wrong file or file path")
+
+    return numdict_track
+
 def zero_count_op_block(dir,dict,label,smart_contract_name):
     opc_dict=dict
     #Number of unconditional branch in a single block
@@ -250,11 +245,7 @@ def zero_count_op_block(dir,dict,label,smart_contract_name):
                 count=count+1;
         numdict_track[key]=count;
 
-    file = 'label'+str(label)+'single_block_zero_count.csv'
-    for key in numdict_track:
-        write = smart_contract_name+","+str(numdict_track[key])+"\n"
-        f = open(project_dir+file, "a+")
-        f.write(write)
+    return numdict_track
 
 def data_load_op_block(dir,dict,label,smart_contract_name):
     opc_dict=dict
@@ -269,12 +260,7 @@ def data_load_op_block(dir,dict,label,smart_contract_name):
                 count=count+1;
         numdict_track[key]=count;
 
-    file = 'label'+str(label)+'single_block_data_load_count.csv'
-    for key in numdict_track:
-        write = smart_contract_name+","+str(numdict_track[key])+"\n"
-        f = open(project_dir+file, "a+")
-        f.write(write)
-
+    return numdict_track
 def sha_op_block(dir,dict,label,smart_contract_name):
     opc_dict=dict
     #Number of unconditional branch in a single block
@@ -288,11 +274,7 @@ def sha_op_block(dir,dict,label,smart_contract_name):
                 count=count+1;
         numdict_track[key]=count;
 
-    file = 'label'+str(label)+'single_block_sha_count.csv'
-    for key in numdict_track:
-        write = smart_contract_name+","+str(numdict_track[key])+"\n"
-        f = open(project_dir+file, "a+")
-        f.write(write)
+    return numdict_track
 
 def revert_op_block(dir,dict,label,smart_contract_name):
     opc_dict=dict
@@ -307,12 +289,15 @@ def revert_op_block(dir,dict,label,smart_contract_name):
                 count=count+1;
         numdict_track[key]=count;
 
-    file = 'label'+str(label)+'single_block_revert_count.csv'
-    for key in numdict_track:
-        write = smart_contract_name+","+str(numdict_track[key])+"\n"
-        f = open(project_dir+file, "a+")
-        f.write(write)
+    return numdict_track
 
+
+
+
+
+
+
+    
 def writeSome(dir,dict,label,smart_contract_name,numdict_track,numdict_max_track,numdict_load_track):
     #Number of arithmetic operation in a single block
     #Maximum number of arithmetic operation from any single block
@@ -350,7 +335,7 @@ def getblock_dict(dir):
 
     lines=f.readlines()
     for line in lines:
-        print(line)
+        #print(line)
         block = line.split()[1];
         value = line.split()[0];
         if block not in dict.keys():
@@ -414,7 +399,10 @@ def deal_one_contract(dir):
     #use = 
     an = num_total_basic_blocks(dict,label,smart_contract_name) #17
     #opc = get_opc_dict(dir,dict,label,smart_contract_name) 
-    print( "Final OUTPUT" + str(max_instruc) + "," + str(max_arith)+ "," + str(backeddge) + "," + str(entry_exit) + "," + str(an) + "\n")
+    first_six_features = str(max_instruc) + "," + str(max_arith)+ "," + str(backeddge) + "," + str(entry_exit) + "," + str(an) 
+    print( "Final OUTPUT" + first_six_features+ "\n")
+
+    opc = get_opc_dict(dir,dict,label,smart_contract_name, first_six_features) 
     
 if __name__ == "__main__":
     fetch_dirfiles(project_dir)
