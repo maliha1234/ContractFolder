@@ -14,7 +14,7 @@ df = pd.read_csv("/Users/malihasarwat/Documents/Summer2020/Sir/FengCodes/Demodat
 #print(df.head())
 df = df.set_index('label')
 df = df.drop('name', axis=1)
-df = df.head(200)
+#df = df.head(200)
 print(df.head())
 res = stat()
 res.chisq(df=df)
