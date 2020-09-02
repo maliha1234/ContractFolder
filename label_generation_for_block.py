@@ -17,15 +17,15 @@ def get_opc_dict(dir,dict,smart_contract_name):
             dict[key]= list
         #print(dict)
 
-        feature1= Labal_arith_opc_block(dir,dict,smart_contract_name)
+        label = Labal_arith_opc_block(dir,dict,smart_contract_name)
         
         # return dict
 
-        file = 'label_with_block.csv'
+        #file = 'label_with_block_smart_.csv'
         
 
-        #write = smart_contract_name+","+ str(label)+ "," + first_six_features +"," + str(dict1[key]) +","+str(dict2[key])+ ","+ str(dict3[key])+ ","+str(dict4[key])+ ","+str(dict5[key])+ ","+str(dict6[key])+ ","+str(dict7[key])+ ","+str(dict8[key]) + ","+str(dict9[key])+ ","+str(dict10[key])+ ","+str(dict11[key])+"\n"
-       # write = smart_contract_name+","+ str(label)+ "," + first_six_features +"," + str(feature1) +  ","+ str(feature3)+ ","+str(feature4)+ ","+str(feature5)+ ","+str(feature6) +  ","+str(feature7) + ","+str(feature8) +  ","+str(feature9) + ","+str(feature10) + ","+str(feature11) +    ","+str(feature16) +"\n"
+        #write = smart_contract_name +","+  str(key)+ ","+ str(label) 
+        # write = smart_contract_name+","+ str(label)+ "," + first_six_features +"," + str(feature1) +  ","+ str(feature3)+ ","+str(feature4)+ ","+str(feature5)+ ","+str(feature6) +  ","+str(feature7) + ","+str(feature8) +  ","+str(feature9) + ","+str(feature10) + ","+str(feature11) +    ","+str(feature16) +"\n"
         #f = open(project_dir+file, "a+")
         #f.write(write)
     except:
@@ -60,9 +60,11 @@ def Labal_arith_opc_block(dir,dict,smart_contract_name):
     numdict_track={}
     
     arit_opc = ["ADD","SUB"]
-    push_opc = ["CONST","CONST"]
+    push_opc = ["MLOAD","SLOAD"]
+    previous_opc = ["CONST"]
+    label = 0
     for key in numdict:
-        
+        label = 0
         valueList = numdict[key]
         
 
@@ -73,11 +75,20 @@ def Labal_arith_opc_block(dir,dict,smart_contract_name):
 
             if i>3 :
 
-                if ((valueList[i] in arit_opc)  and (valueList[i-1] in push_opc) and (valueList[i-2] in push_opc)) :
+                if ((valueList[i] in arit_opc)  and (valueList[i-1] in push_opc) and (valueList[i-2] in previous_opc )) :
                     print(valueList[i-2] + "," + valueList[i-1] + "," +  valueList[i] )
-        #numdict_track[key]=count;
+                    label =1 
+                    break;
+        
+        file = 'label_with_block_smart_.csv' 
+
+        write = smart_contract_name +","+  str(key)+ ","+ str(label) + "\n"
+        f = open(project_dir+file, "a+")
+        f.write(write)
 
     return 0
+
+   
 
 
     
